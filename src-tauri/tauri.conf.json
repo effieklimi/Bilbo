@@ -1,0 +1,72 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Bilbo",
+  "version": "../package.json",
+  "identifier": "com.effieklimi.diary",
+  "build": {
+    "beforeDevCommand": "bun run dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "bun run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "Bilbo",
+        "width": 860,
+        "height": 1050,
+        "minWidth": 620,
+        "minHeight": 640,
+        "decorations": true,
+        "hiddenTitle": true,
+        "titleBarStyle": "Overlay"
+      },
+      {
+        "label": "capture",
+        "title": "Capture",
+        "url": "index.html",
+        "width": 460,
+        "height": 390,
+        "visible": false,
+        "resizable": false,
+        "maximizable": false,
+        "minimizable": false,
+        "alwaysOnTop": true,
+        "shadow": false,
+        "visibleOnAllWorkspaces": true,
+        "skipTaskbar": true,
+        "decorations": true,
+        "hiddenTitle": true,
+        "titleBarStyle": "Overlay"
+      }
+    ],
+    "security": {
+      "csp": "default-src 'self'; connect-src ipc: http://ipc.localhost; font-src 'self' data:; img-src 'self' asset: http://asset.localhost data: blob:; script-src 'self'; style-src 'self' 'unsafe-inline'",
+      "devCsp": "default-src 'self'; connect-src 'self' ws://localhost:1420 ipc: http://ipc.localhost; font-src 'self' data:; img-src 'self' asset: http://asset.localhost data: blob:; script-src 'self'; style-src 'self' 'unsafe-inline'"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "createUpdaterArtifacts": true,
+    "targets": "all",
+    "macOS": {
+      "signingIdentity": "9EFDA697CFB25F55BC80B05AD64FF1B9FC642CA8"
+    },
+    "icon": [
+      "icons/32x32.png",
+      "icons/128x128.png",
+      "icons/128x128@2x.png",
+      "icons/icon.icns",
+      "icons/icon.ico"
+    ]
+  },
+  "plugins": {
+    "updater": {
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDUwQUQwRjAxOTlFMEQzRkUKUldUKzArQ1pBUSt0VU9MbDBhK05VS2pTbStMUW1ZK3h2TGFINXExc2h6ZzJxMWZuMFVzK05PNjcK",
+      "endpoints": [
+        "https://github.com/effieklimi/Bilbo/releases/latest/download/latest.json"
+      ]
+    }
+  }
+}
