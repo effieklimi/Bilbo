@@ -7,6 +7,7 @@
     "dev": "vite",
     "typecheck": "tsc -b",
     "build": "tsc -b && vite build",
+    "build:release": "tauri build --target universal-apple-darwin --bundles app,dmg --config src-tauri/tauri.release.conf.json --ci",
     "preview": "vite preview",
     "tauri": "tauri"
   },
