@@ -20,8 +20,11 @@ It's a very minimalistic, lightweight macOS app that offers:
 
 To install:
 
-1. Download the `.dmg` from the release page, open it, and drag Bilbo into Applications.
-2. Open Bilbo from Applications. It isn't notarized by Apple, so macOS may block the first launch. If that happens, go to **System Settings → Privacy & Security → Open Anyway**, then confirm **Open**. [Apple’s instructions](https://support.apple.com/en-us/102445).
-3. Pick your diary folder. Give Accessibility access if you want to capture selected text from other apps.
+1. [Click here to download Bilbo](https://github.com/effieklimi/Bilbo/releases/download/v0.1.0/Bilbo_0.1.0_universal.dmg), or visit the [release page](https://github.com/effieklimi/Bilbo/releases/latest) and download the `.dmg` file.
+2. Once downloaded, open the `.dmg` file and drag Bilbo into Applications.
+3. Open Bilbo from Applications. It isn't notarized by Apple, so macOS may block the first launch. If that happens, go to **System Settings → Privacy & Security → Open Anyway**, then confirm **Open**. [Apple’s instructions](https://support.apple.com/en-us/102445).
+4. Pick your diary folder. Give Accessibility access if you want to capture selected text from other apps.
 
 Bilbo checks for updates once an hour while running and lets you choose when to install them. Accessibility access may need to be enabled again after an update.
+
+Hope you enjoy. [Contact me](mailto:effie@effie.bio) if you have any opinions about it.
