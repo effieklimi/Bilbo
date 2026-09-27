@@ -22,8 +22,12 @@ To install:
 
 1. [Click here to download Bilbo](https://github.com/effieklimi/Bilbo/releases/download/v0.1.0/Bilbo_0.1.0_universal.dmg), or visit the [release page](https://github.com/effieklimi/Bilbo/releases/latest) and download the `.dmg` file.
 2. Once downloaded, open the `.dmg` file and drag Bilbo into Applications.
-3. Open Bilbo from Applications. It isn't notarized by Apple, so macOS may block the first launch. If that happens, go to **System Settings → Privacy & Security → Open Anyway**, then confirm **Open**. [Apple’s instructions](https://support.apple.com/en-us/102445).
-4. Pick your diary folder. Give Accessibility access if you want to capture selected text from other apps.
+3. Open Bilbo from Applications. The current release isn't notarized by Apple yet, so macOS may show a warning that Apple could not verify Bilbo is free of malware.
+4. Dismiss the warning, then open **System Settings → Privacy & Security**. Scroll down to **Security** and click **Open Anyway** next to Bilbo, as shown below. Confirm **Open** when prompted. [Apple’s instructions](https://support.apple.com/en-us/102445).
+
+   ![macOS Privacy & Security showing Bilbo was blocked and the Open Anyway button](assets/macos-open-anyway.png)
+
+5. Pick your diary folder. Give Accessibility access if you want to capture selected text from other apps.
 
 Bilbo checks for updates once an hour while running and lets you choose when to install them. Accessibility access may need to be enabled again after an update.
 
