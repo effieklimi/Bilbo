@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as Popover from "@radix-ui/react-popover";
 import { ChevronDown } from "lucide-react";
 
@@ -17,6 +17,24 @@ export default function LinkedNotesPopover({
   onOpenDate,
 }: LinkedNotesPopoverProps) {
   const [open, setOpen] = useState(false);
+  const triggerRef = useRef<HTMLButtonElement>(null);
+  const closedByScrollRef = useRef(false);
+
+  useEffect(() => {
+    if (!open) return;
+
+    closedByScrollRef.current = false;
+    const scrollContainer = triggerRef.current?.closest(".diary-entry-scroll");
+    if (!scrollContainer) return;
+
+    const closeOnScroll = () => {
+      closedByScrollRef.current = true;
+      setOpen(false);
+    };
+
+    scrollContainer.addEventListener("scroll", closeOnScroll, { passive: true });
+    return () => scrollContainer.removeEventListener("scroll", closeOnScroll);
+  }, [open]);
 
   if (dateKeys.length === 0) return null;
 
@@ -24,6 +42,7 @@ export default function LinkedNotesPopover({
     <Popover.Root open={open} onOpenChange={setOpen}>
       <Popover.Trigger asChild>
         <button
+          ref={triggerRef}
           type="button"
           className="inline-flex items-center gap-1 rounded-md px-2 py-1 text-foreground/60 transition-colors hover:bg-foreground/[0.04] hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-foreground/20"
         >
@@ -38,6 +57,14 @@ export default function LinkedNotesPopover({
           align="start"
           sideOffset={6}
           collisionPadding={12}
+          onWheel={(event) => event.stopPropagation()}
+          onCloseAutoFocus={(event) => {
+            if (!closedByScrollRef.current) return;
+
+            // Restore focus without pulling the scrolled page back to the button.
+            event.preventDefault();
+            triggerRef.current?.focus({ preventScroll: true });
+          }}
           className="z-[80] max-h-[min(16rem,var(--radix-popover-content-available-height))] w-max min-w-32 max-w-[calc(100vw-1.5rem)] overflow-y-auto overscroll-contain rounded-lg bg-background p-1 font-sans text-[11px] leading-4 text-foreground/80 ring-1 ring-foreground/[0.08] outline-none"
         >
           <ul>

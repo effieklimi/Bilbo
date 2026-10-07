@@ -1060,7 +1060,7 @@ export default function App() {
     >
       <header
         data-tauri-drag-region
-        className="absolute inset-x-0 top-0 z-20 h-10 bg-gradient-to-b from-background via-background/80 to-transparent select-none"
+        className="absolute inset-x-0 top-0 z-20 h-10 border-b border-border/60 bg-background select-none"
       >
         <div
           data-tauri-drag-region

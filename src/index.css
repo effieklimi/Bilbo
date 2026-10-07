@@ -445,6 +445,10 @@
   margin-top: 0.65em;
 }
 
+.diary-editor hr {
+  margin-block: 1.25rem;
+}
+
 .diary-editor code {
   padding: 0.08em 0.32em;
   border-radius: var(--radius-sm);

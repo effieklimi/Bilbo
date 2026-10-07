@@ -18,7 +18,7 @@ It's a very minimalistic, lightweight macOS app that offers:
 - **A few preferences.** Light and dark themes, custom keyboard shortcuts,
   interface sizing, and optional launch at login.
 
-To install:
+### To install:
 
 1. [Click here to download Bilbo](https://github.com/effieklimi/Bilbo/releases/download/v0.1.0/Bilbo_0.1.0_universal.dmg), or visit the [release page](https://github.com/effieklimi/Bilbo/releases/latest) and download the `.dmg` file.
 2. Once downloaded, open the `.dmg` file and drag Bilbo into Applications.
