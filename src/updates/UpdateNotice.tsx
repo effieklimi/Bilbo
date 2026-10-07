@@ -2,16 +2,21 @@ import * as Dialog from "@radix-ui/react-dialog";
 import { invoke, isTauri } from "@tauri-apps/api/core";
 import { relaunch } from "@tauri-apps/plugin-process";
 import { check, type Update } from "@tauri-apps/plugin-updater";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useImperativeHandle, useRef, useState, type Ref } from "react";
 import { errorCode, logEvent } from "../diagnostics/logger";
 
 const HOUR = 60 * 60 * 1000;
 const buttonClassName = "shrink-0 rounded-lg px-2.5 py-1.5 text-xs leading-5 transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-foreground/20";
 
-export default function UpdateNotice({ beforeInstall, onBusyChange, blockedReason }: {
+export type UpdateCheckStatus = "idle" | "checking" | "up-to-date" | "available" | "error" | "unavailable";
+export type UpdateNoticeHandle = { checkForUpdates: () => void };
+
+export default function UpdateNotice({ ref, beforeInstall, onBusyChange, blockedReason, onCheckStatusChange }: {
+  ref?: Ref<UpdateNoticeHandle>;
   beforeInstall: (action: string) => Promise<boolean>;
   onBusyChange: (busy: boolean) => void;
   blockedReason: string | null;
+  onCheckStatusChange: (status: UpdateCheckStatus) => void;
 }) {
   const [update, setUpdate] = useState<Update | null>(null);
   const [visible, setVisible] = useState(false);
@@ -21,19 +26,39 @@ export default function UpdateNotice({ beforeInstall, onBusyChange, blockedReaso
   const updateRef = useRef<Update | null>(null);
   const busyRef = useRef(false);
   const installedRef = useRef(false);
+  const checkNowRef = useRef<(() => void) | null>(null);
+
+  useImperativeHandle(ref, () => ({
+    checkForUpdates: () => checkNowRef.current?.(),
+  }), []);
 
   useEffect(() => {
-    if (!isTauri() || import.meta.env.DEV) return;
+    if (!isTauri() || import.meta.env.DEV) {
+      onCheckStatusChange("unavailable");
+      return;
+    }
     let disposed = false;
     let checking = false;
+    let manualCheck = false;
 
-    async function checkForUpdate() {
-      if (checking || busyRef.current || installedRef.current) return;
+    async function checkForUpdate(manual = false) {
+      if (busyRef.current) return;
+      if (installedRef.current) {
+        if (manual) {
+          setVisible(true);
+          onCheckStatusChange("available");
+        }
+        return;
+      }
+      manualCheck ||= manual;
+      onCheckStatusChange("checking");
+      if (checking) return;
       checking = true;
       try {
         const next = await check({ timeout: 15_000 });
-        if (disposed || busyRef.current) {
-          await next?.close();
+        if (disposed || busyRef.current || installedRef.current) {
+          await next?.close().catch(() => {});
+          if (!disposed) onCheckStatusChange(installedRef.current ? "available" : "idle");
           return;
         }
         const previous = updateRef.current;
@@ -41,23 +66,28 @@ export default function UpdateNotice({ beforeInstall, onBusyChange, blockedReaso
         setUpdate(next);
         setVisible(next !== null);
         setError(null);
-        await previous?.close();
+        onCheckStatusChange(next ? "available" : "up-to-date");
+        void previous?.close().catch(() => {});
       } catch (cause) {
         logEvent("warn", "runtime.failed", { stage: "update_check", errorCode: errorCode(cause) });
+        if (!disposed) onCheckStatusChange(manualCheck ? "error" : "idle");
       } finally {
         checking = false;
+        manualCheck = false;
       }
     }
 
+    checkNowRef.current = () => { void checkForUpdate(true); };
     const interval = window.setInterval(() => { void checkForUpdate(); }, HOUR);
     return () => {
       disposed = true;
+      checkNowRef.current = null;
       window.clearInterval(interval);
       const current = updateRef.current;
       updateRef.current = null;
       void current?.close().catch(() => {});
     };
-  }, []);
+  }, [onCheckStatusChange]);
 
   async function install() {
     const current = updateRef.current;

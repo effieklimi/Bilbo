@@ -6,6 +6,7 @@ import { version as appVersion } from "../../package.json";
 import { THEMES, type ThemeId } from "../themes";
 import { logEvent, updateDiagnosticState } from "../diagnostics/logger";
 import { createOperation } from "../diagnostics/operation";
+import type { UpdateCheckStatus } from "../updates/UpdateNotice";
 import CaptureSettings from "./CaptureSettings";
 import KeyboardShortcutsSettings from "./KeyboardShortcutsSettings";
 import LaunchAtLoginSetting from "./LaunchAtLoginSetting";
@@ -19,6 +20,8 @@ type SettingsPageProps = {
   error: string | null;
   onChooseFolder: () => void;
   onThemeChange: (themeId: ThemeId) => void;
+  updateCheckStatus: UpdateCheckStatus;
+  onCheckForUpdates: () => void;
 };
 
 export default function SettingsPage({
@@ -29,6 +32,8 @@ export default function SettingsPage({
   error,
   onChooseFolder,
   onThemeChange,
+  updateCheckStatus,
+  onCheckForUpdates,
 }: SettingsPageProps) {
   const [showLogs, setShowLogs] = useState(false);
   const viewLogsButtonRef = useRef<HTMLButtonElement>(null);
@@ -182,8 +187,26 @@ export default function SettingsPage({
             View logs
             <ChevronRight aria-hidden="true" className="size-3.5" strokeWidth={1.5} />
           </button>
-          <footer aria-label={`Version ${appVersion}`} className="diary-meta-text mt-8 text-foreground/40">
-            v{appVersion}
+          <footer aria-label="App version and updates" className="diary-meta-text mt-8 text-foreground/40">
+            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
+              <span>v{appVersion}</span>
+              <button
+                type="button"
+                onClick={onCheckForUpdates}
+                disabled={updateCheckStatus === "checking" || updateCheckStatus === "unavailable"}
+                aria-busy={updateCheckStatus === "checking"}
+                title={updateCheckStatus === "unavailable" ? "Update checks are available in the installed app." : undefined}
+                className="rounded-lg px-2.5 py-1.5 text-foreground/60 transition-colors enabled:hover:bg-primary/[0.06] enabled:hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-foreground/20 disabled:opacity-50"
+              >
+                {updateCheckStatus === "checking" ? "Checking…" : "Check for updates"}
+              </button>
+            </div>
+            <p role="status" className={updateCheckStatus === "error" ? "text-destructive" : "text-foreground/60"}>
+              {updateCheckStatus === "up-to-date" ? "You're up to date."
+                : updateCheckStatus === "available" ? "An update is available."
+                : updateCheckStatus === "error" ? "Could not check for updates. Please try again."
+                : null}
+            </p>
           </footer>
         </div>
       </div>

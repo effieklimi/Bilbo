@@ -96,7 +96,7 @@ import {
   useSearchCorpus,
 } from "./search/useSearchCorpus";
 import SettingsPage from "./settings/SettingsPage";
-import UpdateNotice from "./updates/UpdateNotice";
+import UpdateNotice, { type UpdateCheckStatus, type UpdateNoticeHandle } from "./updates/UpdateNotice";
 import {
   formatShortcut,
   isShortcutRecording,
@@ -195,6 +195,8 @@ export default function App() {
   const fileSelectionSequenceRef = useRef(0);
   const closingRef = useRef(false);
   const updateInstallingRef = useRef(false);
+  const updateNoticeRef = useRef<UpdateNoticeHandle>(null);
+  const [updateCheckStatus, setUpdateCheckStatus] = useState<UpdateCheckStatus>("idle");
   const captureRevealSequenceRef = useRef(0);
   const diaryCaptureRevealSequenceRef = useRef(0);
   const referenceWorkspaceRef = useRef<CaptureReferenceWorkspace | null>(null);
@@ -1170,6 +1172,8 @@ export default function App() {
           error={error}
           onChooseFolder={() => void chooseWorkspace()}
           onThemeChange={(themeId) => changeTheme({ ...theme, themeId })}
+          updateCheckStatus={updateCheckStatus}
+          onCheckForUpdates={() => updateNoticeRef.current?.checkForUpdates()}
         />
       ) : loading ? (
         <main className="grid flex-1 place-items-center text-sm text-muted-foreground">
@@ -1267,7 +1271,9 @@ export default function App() {
       )}
 
       <UpdateNotice
+        ref={updateNoticeRef}
         beforeInstall={flushPendingSave}
+        onCheckStatusChange={setUpdateCheckStatus}
         onBusyChange={(busy) => { updateInstallingRef.current = busy; }}
         blockedReason={captureArchiveEditing
           ? "Save or cancel your capture edit before updating."
