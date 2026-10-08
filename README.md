@@ -20,7 +20,7 @@ It's a very minimalistic, lightweight macOS app that offers:
 
 ### To install:
 
-1. [Click here to download Bilbo](https://github.com/effieklimi/Bilbo/releases/download/v0.1.2/Bilbo_0.1.2_universal.dmg), or visit the [release page](https://github.com/effieklimi/Bilbo/releases/latest) and download the `.dmg` file.
+1. [Click here to download Bilbo](https://github.com/effieklimi/Bilbo/releases/download/v0.1.3/Bilbo_0.1.3_universal.dmg), or visit the [release page](https://github.com/effieklimi/Bilbo/releases/latest) and download the `.dmg` file.
 2. Once downloaded, open the `.dmg` file and drag Bilbo into Applications.
 3. Open Bilbo from Applications. The current release isn't notarized by Apple yet, so macOS may show a warning that Apple could not verify Bilbo is free of malware.
 4. Dismiss the warning, then open **System Settings → Privacy & Security**. Scroll down to **Security** and click **Open Anyway** next to Bilbo, as shown below. Confirm **Open** when prompted. [Apple’s instructions](https://support.apple.com/en-us/102445).
