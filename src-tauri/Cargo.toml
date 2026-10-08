@@ -1,6 +1,6 @@
 [package]
 name = "diary"
-version = "0.1.2"
+version = "0.1.3"
 description = "A minimal local Markdown diary"
 authors = ["Effie Klimi"]
 edition = "2021"

@@ -187,26 +187,26 @@ export default function SettingsPage({
             View logs
             <ChevronRight aria-hidden="true" className="size-3.5" strokeWidth={1.5} />
           </button>
-          <footer aria-label="App version and updates" className="diary-meta-text mt-8 text-foreground/40">
-            <div className="flex flex-wrap items-center gap-x-3 gap-y-1">
-              <span>v{appVersion}</span>
+          <footer aria-label="App version and updates" className="diary-meta-text mt-8 flex items-start justify-between gap-6 text-foreground/40">
+            <span className="shrink-0 py-1.5">v{appVersion}</span>
+            <div className="flex min-w-0 flex-col items-end gap-1 text-right">
               <button
                 type="button"
                 onClick={onCheckForUpdates}
                 disabled={updateCheckStatus === "checking" || updateCheckStatus === "unavailable"}
                 aria-busy={updateCheckStatus === "checking"}
                 title={updateCheckStatus === "unavailable" ? "Update checks are available in the installed app." : undefined}
-                className="rounded-lg px-2.5 py-1.5 text-foreground/60 transition-colors enabled:hover:bg-primary/[0.06] enabled:hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-foreground/20 disabled:opacity-50"
+                className="-mr-2.5 rounded-lg px-2.5 py-1.5 text-foreground/60 transition-colors enabled:hover:bg-primary/[0.06] enabled:hover:text-foreground focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-foreground/20 disabled:opacity-50"
               >
                 {updateCheckStatus === "checking" ? "Checking…" : "Check for updates"}
               </button>
+              <p role="status" className={`min-h-4 max-w-56 text-[10px] leading-4 ${updateCheckStatus === "error" ? "text-destructive" : "text-foreground/40"}`}>
+                {updateCheckStatus === "up-to-date" ? "You're up to date."
+                  : updateCheckStatus === "available" ? "An update is available."
+                  : updateCheckStatus === "error" ? "Could not check for updates. Please try again."
+                  : null}
+              </p>
             </div>
-            <p role="status" className={updateCheckStatus === "error" ? "text-destructive" : "text-foreground/60"}>
-              {updateCheckStatus === "up-to-date" ? "You're up to date."
-                : updateCheckStatus === "available" ? "An update is available."
-                : updateCheckStatus === "error" ? "Could not check for updates. Please try again."
-                : null}
-            </p>
           </footer>
         </div>
       </div>
